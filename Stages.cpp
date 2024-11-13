@@ -112,7 +112,7 @@ bool first_level::OnEnter(){
 
         if(i["name"].get<string>() == "PlayerSpawn"){
             unique_ptr<Player> Pl = make_unique<Player>("PlayerTexture", Vector2D(posX, posY), 8, 0);
-
+            Pl->SetMaxSpeed(2, 2);
             Pl->SetTiles(tileMapsCol);
 
             m_gameObjects.emplace_back(move(Pl));

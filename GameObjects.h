@@ -26,6 +26,8 @@ class DinamicObject : public GameObject{
 
 
 class Player : public DinamicObject{
+    private:
+        bool m_jumping = false;
     public:
         Player(string tex, Vector2D pos, int row, int column,SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : DinamicObject(tex, pos, row, column, dir, Collideable, angl){}
         void update();
