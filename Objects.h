@@ -21,6 +21,7 @@ class GameObject{
         float maxSpeedX = 100;
         float maxSpeedY = 100;
         Vector2D m_acceleration;
+        bool m_apply_acceleration = false;
     protected:
         GameObject(string tex, Vector2D pos, int row, int column, SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : m_Texture_ID(tex), m_position(pos), m_column(column), m_row(row), direction(dir), CanCollide(Collideable), angle(angl), m_velocity(0, 0), realPosition(pos), m_acceleration(0, 0) {}
     public:
@@ -64,6 +65,11 @@ class GameObject{
             return realPosition;
         }
 
+        void setRealPos(float x, float y){
+            realPosition = Vector2D(x, y);
+            //m_position = Vector2D(x, y);
+        }
+
         void SetMaxSpeed(float x, float y){
             maxSpeedX = x; 
             maxSpeedY = y;
@@ -76,12 +82,16 @@ class GameObject{
         void setAcceleration(float x, float y){
             m_acceleration = Vector2D(x, y);
         }
+        void setApplyAcceleration(bool a){
+            m_apply_acceleration = a;
+        }
 };
 
 class NormalTile : public GameObject{
     public:
         NormalTile(string tex, Vector2D pos, int row, int column, SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : GameObject(tex, pos, row, column, dir, Collideable, angl) {}
         void update(){}
+        void onLoad(){}
 };
 
 #endif

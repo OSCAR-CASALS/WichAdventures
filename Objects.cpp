@@ -8,11 +8,13 @@ void GameObject::draw(){
 }
 
 void GameObject::update(){
-    if(m_acceleration.getX() == 0){
-        m_velocity.setX(0);
-    }
-    if(m_acceleration.getY() == 0){
-        m_velocity.setY(0);
+    if(m_apply_acceleration == true){
+        if(m_acceleration.getX() == 0){
+            m_velocity.setX(0);
+        }
+        if(m_acceleration.getY() == 0){
+            m_velocity.setY(0);
+        }
     }
 
     if(m_velocity.getX() >= maxSpeedX){

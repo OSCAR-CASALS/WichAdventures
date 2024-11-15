@@ -7,12 +7,14 @@ void Camera::setX(float x){
             t->setCameraX(x);   
         }
     }
+    /*
     if(GameO){
         //cout << diff << endl;
         for (auto &o : *GameO){
-            o->setPosition(o->getPosition().getX() - diff, o->getPosition().getY());
+            o->setPosition(o->getRealPos().getX() - diff, o->getPosition().getY());
         }
     }
+    */
     m_position.setX(x);
 }
 
@@ -23,12 +25,13 @@ void Camera::setY(float y){
             t->setCameraY(y);   
         }
     }
+    /*
     if(GameO){
-        //cout << diff << endl;
         for (auto &o : *GameO){
-            o->setPosition(o->getPosition().getX(), o->getPosition().getY() - diff);
+            o->setPosition(o->getRealPos().getX(), o->getPosition().getY() - diff);
         }
     }
+    */
     m_position.setY(y);
 }
 
@@ -46,16 +49,26 @@ void Camera::update(){
 }
 
 void Camera::render(){
-    for (auto &t : *TileMapsToMove){
-        t->draw();  
+    if(TileMapsToMove){
+        for (auto &t : *TileMapsToMove){
+            t->draw();  
+        }
+    }
+    if(GameO){
+        //cout << diff << endl;
+        for (auto &o : *GameO){
+            o->setPosition(o->getRealPos().getX() - m_position.getX(), o->getRealPos().getY() - m_position.getY());
+            o->draw();
+        }
     }
 }
 
 void Camera::Exit(){
-    
-    for(auto &t : *TileMapsToMove){
-        t->Exit();
+    if(TileMapsToMove){
+        for(auto &t : *TileMapsToMove){
+            t->Exit();
+        }
+        
+        TileMapsToMove->clear();
     }
-    
-    TileMapsToMove->clear();
 }

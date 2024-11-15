@@ -42,7 +42,7 @@ const string first_level::s_first_levelID = "FIRST_LEVEL";
 
 void first_level::update(){
     //PlayerHandler();
-    /*
+    
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_RIGHT]){
         camera.setSpeed(2, 0);
@@ -56,7 +56,7 @@ void first_level::update(){
     else{
         camera.setSpeed(0, 0);
     }
-    */
+    
     for(auto &go : m_gameObjects){
         go->update();
     }
@@ -73,9 +73,11 @@ void first_level::render(){
     */
     //drawFull("DaddyProfile", 0, 0, false, SDL_FLIP_NONE);
     camera.render();
+    /*
     for(auto &g : m_gameObjects){
         g->draw();
     }
+    */
 
 }
 
@@ -112,9 +114,8 @@ bool first_level::OnEnter(){
 
         if(i["name"].get<string>() == "PlayerSpawn"){
             unique_ptr<Player> Pl = make_unique<Player>("PlayerTexture", Vector2D(posX, posY), 8, 0);
-            Pl->SetMaxSpeed(2, 2);
             Pl->SetTiles(tileMapsCol);
-
+            Pl->OnLoad();
             m_gameObjects.emplace_back(move(Pl));
         }
     }
@@ -130,9 +131,9 @@ bool first_level::OnEnter(){
     Set_Background_Color(147, 148, 254, 1);
     camera.SetTileMaps(tileMapsCol);
     camera.SetGameObjects(m_gameObjects);
-    camera.setY(40.0);
+    //camera.setY(40.0);
 
-    camera.setTarget(m_gameObjects[0]);
+    //camera.setTarget(m_gameObjects[0]);
 
     return true;
 }
