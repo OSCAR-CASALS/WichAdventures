@@ -129,7 +129,7 @@ void TileMap::update(bool scrollX, bool scrollY){
     }
 }
 
-pair<int, int> TileMap::checkCollision(Vector2D pos, int width, int height, bool interaction, bool attack){ 
+pair<int, int> TileMap::checkCollision(Vector2D pos, int width, int height, bool interaction, bool attack, string objectTag){ 
     int leftTile = int(pos.getX()) / TileSize;
     int rightTile = (int(pos.getX()) + width) / TileSize;
     int topTile = int(pos.getY()) / TileSize;
@@ -148,7 +148,7 @@ pair<int, int> TileMap::checkCollision(Vector2D pos, int width, int height, bool
             pair<int, int> TheTile = tilesID[j][i];
             //tiles[j][TheTile.second]->OnCollision();
             if(TheTile.first != 0){
-                tiles[j][TheTile.second]->OnCollision(pos, width, height, i, j, "");
+                tiles[j][TheTile.second]->OnCollision(pos, width, height, i, j, objectTag);
                 if(tiles[j][TheTile.second]->getCollideable() == true){
                     return {j, i};
                 }
@@ -160,10 +160,14 @@ pair<int, int> TileMap::checkCollision(Vector2D pos, int width, int height, bool
 
 
 void TileMap::RemoveTile(int x, int y){
-    //pair<int, int> TheTile = tilesID[y][x];
+    pair<int, int> TheTile = tilesID[y][x];
     //if(TheTile.first != 0){
     //    delete tiles[y][TheTile.second];
     //}
+    if(TheTile.first != 0){
+        tiles.erase(tiles.begin() + TheTile.second);
+    }
+
     tilesID[y][x] = {0, -1};
 }
 

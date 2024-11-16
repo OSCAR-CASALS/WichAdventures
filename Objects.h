@@ -22,6 +22,7 @@ class GameObject{
         float maxSpeedY = 100;
         Vector2D m_acceleration;
         bool m_apply_acceleration = false;
+        string tag = "None";
     protected:
         GameObject(string tex, Vector2D pos, int row, int column, SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : m_Texture_ID(tex), m_position(pos), m_column(column), m_row(row), direction(dir), CanCollide(Collideable), angle(angl), m_velocity(0, 0), realPosition(pos), m_acceleration(0, 0) {}
     public:
@@ -84,6 +85,12 @@ class GameObject{
         }
         void setApplyAcceleration(bool a){
             m_apply_acceleration = a;
+        }
+        string getTag(){
+            return tag;
+        }
+        void setTag(string t){
+            tag = t;
         }
 };
 

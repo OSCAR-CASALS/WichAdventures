@@ -5,12 +5,6 @@
 #include "TileClass.h"
 #include<map>
 
-void Player::OnLoad(){
-    //setTileWidthHeight(12, 16);
-    SetMaxSpeed(2, 2);
-    setApplyAcceleration(true);
-}
-
 void DinamicObject::HandleMovement(){
     Vector2D vel = getVelocity() + getAcceleration();
     Vector2D newPosition = getRealPos();
@@ -80,4 +74,11 @@ void Player::update(){
     }
 
     DinamicObject::update();
+}
+
+void Player::OnLoad(){
+    //setTileWidthHeight(12, 16);
+    SetMaxSpeed(2, 2);
+    setApplyAcceleration(true);
+    setTag("Player");
 }

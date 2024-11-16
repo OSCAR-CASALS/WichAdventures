@@ -131,7 +131,7 @@ bool first_level::OnEnter(){
     Set_Background_Color(147, 148, 254, 1);
     camera.SetTileMaps(tileMapsCol);
     camera.SetGameObjects(m_gameObjects);
-    //camera.setY(40.0);
+    camera.setY(40.0);
 
     //camera.setTarget(m_gameObjects[0]);
 
