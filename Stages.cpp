@@ -57,10 +57,6 @@ void first_level::update(){
         camera.setSpeed(0, 0);
     }
     
-    for(auto &go : m_gameObjects){
-        go->update();
-    }
-    
     camera.update();  
 
 }

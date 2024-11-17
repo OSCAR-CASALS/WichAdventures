@@ -27,6 +27,11 @@ void Camera::update(){
     for (auto &t : *TileMapsToMove){
         t->update();   
     }
+    if(GameO){
+        for(auto &o : *GameO){
+            o->update();
+        }
+    }
 }
 
 void Camera::render(){

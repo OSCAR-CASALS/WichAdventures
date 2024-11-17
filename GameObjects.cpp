@@ -10,7 +10,35 @@ void DinamicObject::HandleMovement(){
     Vector2D newPosition = getRealPos();
     //Vector2D drawPosition = getPosition();
     Vector2D Acceleration = getAcceleration();
+    
+    if(vel.getX() > maxSpeedX){
+        vel.setX(maxSpeedX);
+    }else if(vel.getX() < ((-1) * maxSpeedX)){
+        vel.setX(((-1) * maxSpeedX));
+    }
 
+    if(vel.getY() > maxSpeedY){
+        vel.setY(maxSpeedY);
+    }else if(vel.getY() < ((-1) * maxSpeedY)){
+        vel.setY(((-1) * maxSpeedY));
+    }
+
+
+    if(Acceleration.getX() == 0){
+        if(vel.getX() > 0){
+            vel.setX(round((vel.getX() - deacceleration) * 100.0)/100.0);
+        }else if(vel.getX() < 0){
+            vel.setX(round((vel.getX() + deacceleration) * 100.0)/100.0);
+        }
+    }
+
+    if(Acceleration.getY() == 0){
+        if(vel.getY() > 0){
+            vel.setY(round((vel.getY() - deacceleration) * 100.0)/100.0);
+        }else if(vel.getY() < 0){
+            vel.setY(round((vel.getY() + deacceleration) * 100.0)/100.0);
+        }
+    }
 
 
     if(Tiles){
@@ -40,7 +68,6 @@ void DinamicObject::HandleMovement(){
     setVelocity(vel.getX(), vel.getY());
     setAcceleration(Acceleration.getX(), Acceleration.getY());
     setRealPos(newPosition.getX(), newPosition.getY());
-    //setPosition(drawPosition.getX() + vel.getX(), drawPosition.getY() + vel.getY());
 }
 
 
@@ -52,19 +79,15 @@ void DinamicObject::update(){
 void Player::update(){
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     
+    setAcceleration(0, acceleration);
+
     if(state[SDL_SCANCODE_D]){
-        setVelocity(2, 0);
+        setAccelerationX(acceleration);
     }else if(state[SDL_SCANCODE_A]){
-        setVelocity(-2, 0);
-    }else if(state[SDL_SCANCODE_W]){
-        setVelocity(0, -2);
-    } else if(state[SDL_SCANCODE_S]){
-        setVelocity(0, 2);
-    }else if(state[SDL_SCANCODE_K]){
-        setRealPos(40, 10);
+        setAccelerationX(-acceleration);
     }
     else{
-        setVelocity(0,0);
+        setAccelerationX(0);
         /*
         setAcceleration(getAcceleration().getX(), 0);
         if(m_jumping == false){
@@ -73,12 +96,25 @@ void Player::update(){
         */
     }
 
+    if(state[SDL_SCANCODE_K]){
+        if((getAcceleration().getX() < (acceleration*2)) & (getAcceleration().getX() > -(acceleration*2))){
+            setAccelerationX(getAcceleration().getX() * 2);
+        }
+        SetMaxSpeed(4, 4);
+    }else{
+        SetMaxSpeed(2, 4);
+    }
+
+    if(state[SDL_SCANCODE_W]){
+        setAccelerationY(-acceleration);
+    }
+
     DinamicObject::update();
 }
 
 void Player::OnLoad(){
     //setTileWidthHeight(12, 16);
-    SetMaxSpeed(2, 2);
-    setApplyAcceleration(true);
+    SetMaxSpeed(2, 4);
     setTag("Player");
+    SetDeacceleration(acceleration);
 }
