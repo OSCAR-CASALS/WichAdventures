@@ -20,10 +20,14 @@ void Camera::setY(float y){
 
 void Camera::update(){
     if(Target){
-        scroll_speed = Target->getVelocity();
+        //scroll_speed = Target->getVelocity();
+        pair <int, int> dims = getDimensions();
+        setX(Target->getRealPos().getX() - (dims.first/2));
+        setY(Target->getRealPos().getY() - (dims.second/2));
+    }else{
+        setX(m_position.getX() + scroll_speed.getX());
+        setY(m_position.getY() + scroll_speed.getY());
     }
-    setX(m_position.getX() + scroll_speed.getX());
-    setY(m_position.getY() + scroll_speed.getY());
     for (auto &t : *TileMapsToMove){
         t->update();   
     }

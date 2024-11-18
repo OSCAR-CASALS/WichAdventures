@@ -94,9 +94,9 @@ void Player::update(){
         if((getAcceleration().getX() < (acceleration*2)) & (getAcceleration().getX() > -(acceleration*2))){
             setAccelerationX(getAcceleration().getX() * 2);
         }
-        SetMaxSpeed(4, 4);
+        SetMaxSpeed(2, 4);
     }else{
-        SetMaxSpeed(1, 4);
+        SetMaxSpeed(0.5, 4);
     }
 
     if(state[SDL_SCANCODE_W]){
@@ -110,7 +110,7 @@ void Player::update(){
 
 void Player::OnLoad(){
     //setTileWidthHeight(12, 16);
-    SetMaxSpeed(1, 4);
+    SetMaxSpeed(0.5, 4);
     setTag("Player");
     SetDeacceleration(acceleration);
 }
