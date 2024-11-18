@@ -44,8 +44,8 @@ void DinamicObject::HandleMovement(){
     if(Tiles){
         newPosition.setX(newPosition.getX() + vel.getX());
         for(auto &o : *Tiles){
-            pair <int, int> colX = o->checkCollision(newPosition, getWidth(), getHeight());
-            if(colX.first != -1){
+            vector<pair <int, int>> colX = o->checkCollision(newPosition, getWidth(), getHeight());
+            if(colX.size() != 0){
                 newPosition.setX(getRealPos().getX());
                 vel.setX(0);
                 Acceleration.setX(0);
@@ -54,9 +54,9 @@ void DinamicObject::HandleMovement(){
         }
         newPosition.setY(newPosition.getY() + vel.getY());
         for(auto &o : *Tiles){
-            pair <int, int> colY = o->checkCollision(newPosition, getWidth(), getHeight());
+            vector<pair <int, int>> colY = o->checkCollision(newPosition, getWidth(), getHeight());
             
-            if(colY.first != -1){
+            if(colY.size() != 0){
                 //cout << "ColHapened" << endl;
                 newPosition.setY(getRealPos().getY());
                 vel.setY(0);
@@ -88,12 +88,6 @@ void Player::update(){
     }
     else{
         setAccelerationX(0);
-        /*
-        setAcceleration(getAcceleration().getX(), 0);
-        if(m_jumping == false){
-            setAcceleration(getAcceleration().getX(), 0.2);
-        }
-        */
     }
 
     if(state[SDL_SCANCODE_K]){
@@ -102,11 +96,13 @@ void Player::update(){
         }
         SetMaxSpeed(4, 4);
     }else{
-        SetMaxSpeed(2, 4);
+        SetMaxSpeed(1, 4);
     }
 
     if(state[SDL_SCANCODE_W]){
-        setAccelerationY(-acceleration);
+        if((m_jumping == false) && (canJump == true)){
+            setAccelerationY(-acceleration);
+        }
     }
 
     DinamicObject::update();
@@ -114,7 +110,7 @@ void Player::update(){
 
 void Player::OnLoad(){
     //setTileWidthHeight(12, 16);
-    SetMaxSpeed(2, 4);
+    SetMaxSpeed(1, 4);
     setTag("Player");
     SetDeacceleration(acceleration);
 }

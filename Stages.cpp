@@ -129,7 +129,7 @@ bool first_level::OnEnter(){
     camera.SetGameObjects(m_gameObjects);
     camera.setY(40.0);
 
-    //camera.setTarget(m_gameObjects[0]);
+    camera.setTarget(m_gameObjects[0]);
 
     return true;
 }

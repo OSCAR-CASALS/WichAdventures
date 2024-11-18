@@ -38,7 +38,7 @@ class TileMap {
         void setCameraY(float y){
             camera.setY(y);
         }
-        pair<int, int> checkCollision(Vector2D pos, int width, int height, bool interaction = false, bool attack = false, string objectTag = "");
+        vector<pair<int, int>> checkCollision(Vector2D pos, int width, int height, bool interaction = false, bool attack = false, string objectTag = "");
 
         void RemoveTile(int x, int y);
 
