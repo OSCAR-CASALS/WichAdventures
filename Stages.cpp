@@ -42,7 +42,7 @@ const string first_level::s_first_levelID = "FIRST_LEVEL";
 
 void first_level::update(){
     //PlayerHandler();
-    
+    /*
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_RIGHT]){
         camera.setSpeed(2, 0);
@@ -56,7 +56,12 @@ void first_level::update(){
     else{
         camera.setSpeed(0, 0);
     }
-    
+    */
+    if(m_gameObjects[0]->getPosition().getX() > ((getDimensions().first/2) - 16) && (m_gameObjects[0]->getVelocity().getX() > 0)){
+        camera.setSpeed(m_gameObjects[0]->getVelocity().getX(), m_gameObjects[0]->getVelocity().getY());
+    }else{
+        camera.setSpeed(0, m_gameObjects[0]->getVelocity().getY());
+    }
     camera.update();  
 
 }
@@ -82,6 +87,7 @@ bool first_level::OnEnter(){
     loadTexture("floorTile", "Sprites/TileMap_Mario.png");
     loadTexture("PlayerTexture", "Sprites/mario.png");
     loadTexture("Item", "Sprites/Items.png");
+    loadTexture("Enemies", "Sprites/Enemies.png");
     //loadTexture("PlayerTextura", "Sprites/GreyScaleDaddy.png");
     //loadTexture("DaddyProfile", "Sprites/ProfilePicks.png");
     //vector<int> testLevel = {1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1};
@@ -113,6 +119,11 @@ bool first_level::OnEnter(){
             Pl->SetTiles(tileMapsCol);
             Pl->OnLoad();
             m_gameObjects.emplace_back(move(Pl));
+        }else if(i["name"].get<string>() == "GoombaSpawn"){
+            unique_ptr<Goomba> G = make_unique<Goomba>("Enemies", Vector2D(posX, posY), 16, 0);
+            G->SetTiles(tileMapsCol);
+            G->OnLoad();
+            m_gameObjects.emplace_back(move(G));
         }
     }
     //tileMapsCol.push_back(TileMap("Sprites/test.txt", 26, 40, 16, 30, 24));
@@ -129,7 +140,7 @@ bool first_level::OnEnter(){
     camera.SetGameObjects(m_gameObjects);
     camera.setY(40.0);
 
-    camera.setTarget(m_gameObjects[0]);
+    //camera.setTarget(m_gameObjects[0]);
 
     return true;
 }

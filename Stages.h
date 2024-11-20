@@ -36,6 +36,7 @@ class first_level: public GameState{
         static const string s_first_levelID;
         vector<unique_ptr<TileMap>> tileMapsCol;
         vector<unique_ptr<GameObject>> m_gameObjects;
+        shared_ptr<GameObject> player;
         Camera camera;
     public:
         // first_level() : player("PlayerTexture", Vector2D(228, 119), Vector2D(231, 128), Vector2D(230,288),12, 6, 16, 6, 0, 0, "Item"){}

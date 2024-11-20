@@ -27,7 +27,7 @@ class GameObject{
         virtual void update() = 0;
         virtual void OnCollision(Vector2D ColPosition, int width, int height, int &tileX, int &tileY, string signal=""){}
         virtual void OnLoad() {}
-        void draw();
+        virtual void draw();
         void setPosition(float x, float y){
             m_position = Vector2D(x, y);
         }

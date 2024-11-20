@@ -12,6 +12,8 @@
 using namespace std;
 
 
+// Base Class
+
 class DinamicObject : public GameObject{
     private:
         vector<unique_ptr<TileMap>> *Tiles = nullptr;
@@ -19,6 +21,11 @@ class DinamicObject : public GameObject{
         float maxSpeedX = 100;
         float maxSpeedY = 100;
         float deacceleration = 0;
+        int offsetX = 0;
+        int offsetY = 0;
+        float offsetPosX = 0;
+        float offsetPosY = 0;
+        bool showHitbox = false;
     public:
         DinamicObject(string tex, Vector2D pos, int row, int column,SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : GameObject(tex, pos, row, column, dir, Collideable, angl) {}
         
@@ -48,8 +55,43 @@ class DinamicObject : public GameObject{
 
         void update();
 
+        void draw();
+
+        virtual void OnCollisionX(){}
+
+        virtual void OnCollisionY(){}
+
+        void SetOffsetX(int x){
+            offsetX = x;
+        }
+
+        void SetOffsetY(int y){
+            offsetY = y;
+        }
+
+        int getOffsetX(){
+            return offsetX;
+        }
+
+        int getOffsetY(){
+            return offsetY;
+        }
+
+        void setShowHitbox(bool x){
+            showHitbox = x;
+        }
+
+        void setOffsetPosX(float x){
+            offsetPosX = x;
+        }
+
+        void setOffsetPosY(float y){
+            offsetPosY = y;
+        }
+
 };
 
+// Derivates
 
 class Player : public DinamicObject{
     private:
@@ -60,6 +102,23 @@ class Player : public DinamicObject{
         Player(string tex, Vector2D pos, int row, int column,SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : DinamicObject(tex, pos, row, column, dir, Collideable, angl){}
         void update();
         void OnLoad();
+};
+
+class Goomba : public DinamicObject{
+    private:
+        float direction = 1;
+    public:
+        Goomba(string tex, Vector2D pos, int row, int column,SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : DinamicObject(tex, pos, row, column, dir, Collideable, angl){}
+        void OnLoad(){
+            SetOffsetY(-2);
+            SetOffsetX(-2);
+            SetMaxSpeed(2, 2);
+            setShowHitbox(true);
+            setOffsetPosX(1);
+        }
+        void update();
+
+        void OnCollisionX();
 };
 
 #endif

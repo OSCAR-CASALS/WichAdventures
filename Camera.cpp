@@ -61,3 +61,7 @@ void Camera::Exit(){
         TileMapsToMove->clear();
     }
 }
+
+void Camera::SetGameObjects(vector<unique_ptr<GameObject>> &objects){
+    GameO = &objects;
+}

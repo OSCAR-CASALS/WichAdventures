@@ -7,6 +7,7 @@
 
 void DinamicObject::HandleMovement(){
     Vector2D vel = getVelocity() + getAcceleration();
+    Vector2D offsetPos = Vector2D(offsetPosX, offsetPosY);
     Vector2D newPosition = getRealPos();
     //Vector2D drawPosition = getPosition();
     Vector2D Acceleration = getAcceleration();
@@ -44,23 +45,25 @@ void DinamicObject::HandleMovement(){
     if(Tiles){
         newPosition.setX(newPosition.getX() + vel.getX());
         for(auto &o : *Tiles){
-            vector<pair <int, int>> colX = o->checkCollision(newPosition, getWidth(), getHeight());
+            vector<pair <int, int>> colX = o->checkCollision(newPosition + offsetPos, getWidth() + offsetX, getHeight() + offsetY);
             if(colX.size() != 0){
                 newPosition.setX(getRealPos().getX());
                 vel.setX(0);
                 Acceleration.setX(0);
+                OnCollisionX();
                 break;
             }
         }
         newPosition.setY(newPosition.getY() + vel.getY());
         for(auto &o : *Tiles){
-            vector<pair <int, int>> colY = o->checkCollision(newPosition, getWidth(), getHeight());
+            vector<pair <int, int>> colY = o->checkCollision(newPosition + offsetPos, getWidth() + offsetX, getHeight() + offsetY);
             
             if(colY.size() != 0){
                 //cout << "ColHapened" << endl;
                 newPosition.setY(getRealPos().getY());
                 vel.setY(0);
                 Acceleration.setY(0);
+                OnCollisionY();
                 break;
             }
         }
@@ -76,10 +79,18 @@ void DinamicObject::update(){
     //GameObject::update();
 }
 
+void DinamicObject::draw(){
+    GameObject::draw();
+    if(showHitbox == true){
+        SDL_Rect re = {getPosition().getX() + offsetPosX, getPosition().getY() + offsetPosY, getWidth() + offsetX, getHeight() + offsetY};
+        draw_rect(re);
+    }
+}
+
 void Player::update(){
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     
-    setAcceleration(0, acceleration);
+    setAcceleration(0, 0.4);
 
     if(state[SDL_SCANCODE_D]){
         setAccelerationX(acceleration);
@@ -110,7 +121,25 @@ void Player::update(){
 
 void Player::OnLoad(){
     //setTileWidthHeight(12, 16);
-    SetMaxSpeed(0.5, 4);
+    SetMaxSpeed(0.5, 1);
     setTag("Player");
     SetDeacceleration(acceleration);
+    SetOffsetY(-2);
+    setShowHitbox(true);
+}
+
+// Goomba functions
+
+void Goomba::update(){
+    setAccelerationY(0.4);
+    if(getPosition().getX() < (getDimensions().first - 10)){
+        // Destroy object
+    }
+    setVelocity(direction, getVelocity().getY());
+    DinamicObject::update();
+}
+
+void Goomba::OnCollisionX(){
+    cout << direction << endl;
+    direction = direction * (-1);
 }

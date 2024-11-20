@@ -20,9 +20,7 @@ class Camera {
             TileMapsToMove = &TMaps;
         }
 
-        void SetGameObjects(vector<unique_ptr<GameObject>> &objects){
-            GameO = &objects;
-        }
+        void SetGameObjects(vector<unique_ptr<GameObject>> &objects);
 
         void update();
 
