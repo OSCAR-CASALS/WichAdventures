@@ -57,10 +57,13 @@ void first_level::update(){
         camera.setSpeed(0, 0);
     }
     */
-    if(m_gameObjects[0]->getPosition().getX() > ((getDimensions().first/2) - 16) && (m_gameObjects[0]->getVelocity().getX() > 0)){
-        camera.setSpeed(m_gameObjects[0]->getVelocity().getX(), m_gameObjects[0]->getVelocity().getY());
+
+   vector<unique_ptr<GameObject>> &O = m_gameObjects.getVector();
+    // && (O[0]->getVelocity().getX() != 0)
+    if(O[0]->getRealPos().getX() > ((getDimensions().first/2) - 16)){
+        camera.setSpeed(O[0]->getVelocity().getX(), O[0]->getVelocity().getY());
     }else{
-        camera.setSpeed(0, m_gameObjects[0]->getVelocity().getY());
+        camera.setSpeed(0, O[0]->getVelocity().getY());
     }
     camera.update();  
 
@@ -118,12 +121,13 @@ bool first_level::OnEnter(){
             unique_ptr<Player> Pl = make_unique<Player>("PlayerTexture", Vector2D(posX, posY), 8, 0);
             Pl->SetTiles(tileMapsCol);
             Pl->OnLoad();
-            m_gameObjects.emplace_back(move(Pl));
+            m_gameObjects.AddObject(move(Pl));
         }else if(i["name"].get<string>() == "GoombaSpawn"){
             unique_ptr<Goomba> G = make_unique<Goomba>("Enemies", Vector2D(posX, posY), 16, 0);
             G->SetTiles(tileMapsCol);
             G->OnLoad();
-            m_gameObjects.emplace_back(move(G));
+            G->SetObj(m_gameObjects, m_gameObjects.getSize());
+            m_gameObjects.AddObject(move(G));
         }
     }
     //tileMapsCol.push_back(TileMap("Sprites/test.txt", 26, 40, 16, 30, 24));
@@ -164,7 +168,7 @@ bool first_level::OnExit(){
         delete go;
     }
     */
-    m_gameObjects.clear();
+    m_gameObjects.Exit();
     cout << "Deleted Pointers" << endl;
     return true;
 }

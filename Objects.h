@@ -19,6 +19,10 @@ class GameObject{
         Vector2D m_velocity;
         Vector2D realPosition;
         Vector2D m_acceleration;
+        int offsetX = 0;
+        int offsetY = 0;
+        float offsetPosX = 0;
+        float offsetPosY = 0;
         string tag = "None";
     protected:
         GameObject(string tex, Vector2D pos, int row, int column, SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : m_Texture_ID(tex), m_position(pos), m_column(column), m_row(row), direction(dir), CanCollide(Collideable), angle(angl), m_velocity(0, 0), realPosition(pos), m_acceleration(0, 0) {}
@@ -86,6 +90,38 @@ class GameObject{
         }
         void setTag(string t){
             tag = t;
+        }
+
+        void SetOffsetX(int x){
+            offsetX = x;
+        }
+
+        void SetOffsetY(int y){
+            offsetY = y;
+        }
+
+        int getOffsetX(){
+            return offsetX;
+        }
+
+        int getOffsetY(){
+            return offsetY;
+        }
+
+        float getOffsetPosX(){
+            return offsetPosX;
+        }
+
+        float getOffsetPosY(){
+            return offsetPosY;
+        }
+
+        void setOffsetPosX(float x){
+            offsetPosX = x;
+        }
+
+        void setOffsetPosY(float y){
+            offsetPosY = y;
         }
 };
 

@@ -8,6 +8,7 @@
 #include "Objects.h"
 #include "Camera.h"
 #include "GameObjects.h"
+#include "GameObjectHandler.h"
 #include <memory>
 #include<fstream>
 #include<nlohmann/json.hpp>
@@ -35,8 +36,7 @@ class first_level: public GameState{
     private:
         static const string s_first_levelID;
         vector<unique_ptr<TileMap>> tileMapsCol;
-        vector<unique_ptr<GameObject>> m_gameObjects;
-        shared_ptr<GameObject> player;
+        ObjectLayer m_gameObjects;
         Camera camera;
     public:
         // first_level() : player("PlayerTexture", Vector2D(228, 119), Vector2D(231, 128), Vector2D(230,288),12, 6, 16, 6, 0, 0, "Item"){}

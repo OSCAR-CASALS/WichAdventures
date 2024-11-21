@@ -4,52 +4,43 @@
 #include "Vector.h"
 #include "Functions.h"
 #include "Objects.h"
-#include "GameObjects.h"
-#include "TileClass.h"
 #include <map>
 #include <memory>
+#include<algorithm>
 
-class ObjectLayer {
+class ObjectLayer{
     private:
-        int m_height;
-        int m_cols;
-        int TileSize;
-        int drawingDistanceX;
-        int drawingDistanceY;
-        vector<vector<pair<int, int>>> tilesID;
-        vector<vector<unique_ptr<GameObject>>> tiles;
-        Vector2D camera;
+        vector<unique_ptr<GameObject>> GameObjectsVector;
+        vector<int> indexToRemove;
+        float offsetPosX = 0;
+        float offsetPosY = 0;
     public:
-        void load();
-        ObjectLayer(int height, int cols, int tileSize, int renderDistanceX, int renderDistanceY) : m_height(height), m_cols(cols), TileSize(tileSize), drawingDistanceX(renderDistanceX), drawingDistanceY(renderDistanceY) ,camera(0, 0){
-            //load(levelvector);
-            load();
+        vector<unique_ptr<GameObject>>& getVector(){
+            return GameObjectsVector;
         }
+        vector<int> getIndexToRemove(){
+            return indexToRemove;
+        }
+        void setIndexToRemove(int i){
+            indexToRemove.push_back(i);
+        }
+        void SetOffsetX(float x){
+            offsetPosX = x;
+        }
+        void SetOffsetY(float y){
+            offsetPosY = y;
+        }
+        void update();
         void draw();
-        void update(bool scrollX = true, bool scrollY = true);
-        Vector2D getCamera(){
-            return camera;
+        void AddObject(unique_ptr<GameObject> o){
+            GameObjectsVector.emplace_back(move(o));
         }
-        void setCamera(float x, float y){
-            camera.setX(x);
-            camera.setY(y);
+        void Exit(){
+            GameObjectsVector.clear();
         }
-        void setCameraX(float x){
-            camera.setX(x);
+        int getSize(){
+            return GameObjectsVector.size();
         }
-        void setCameraY(float y){
-            camera.setY(y);
-        }
-        pair<int, int> checkCollision(Vector2D pos, int width, int height, bool interaction = false, bool attack = false);
-
-        void RemoveTile(int x, int y);
-
-        void UpdateTilePos(int x, int y, int x2, int y2);
-
-        void Exit();
-
-        void addLayer(){}
-        //void DefineSprites(){}
 };
 
 #endif

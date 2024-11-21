@@ -5,6 +5,7 @@
 #include "Vector.h"
 #include "Objects.h"
 #include "TileClass.h"
+#include "GameObjectHandler.h"
 #include<memory>
 #include<map>
 #include<cmath>
@@ -17,15 +18,12 @@ using namespace std;
 class DinamicObject : public GameObject{
     private:
         vector<unique_ptr<TileMap>> *Tiles = nullptr;
-        vector<unique_ptr<GameObject>> *Obj = nullptr;
+        ObjectLayer *Obj = nullptr;
         float maxSpeedX = 100;
         float maxSpeedY = 100;
         float deacceleration = 0;
-        int offsetX = 0;
-        int offsetY = 0;
-        float offsetPosX = 0;
-        float offsetPosY = 0;
         bool showHitbox = false;
+        int index = 0;
     public:
         DinamicObject(string tex, Vector2D pos, int row, int column,SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : GameObject(tex, pos, row, column, dir, Collideable, angl) {}
         
@@ -35,8 +33,18 @@ class DinamicObject : public GameObject{
             Tiles = &objects;
         }
         
-        void SetObj(vector<unique_ptr<GameObject>> &objects){
+        void SetObj(ObjectLayer &objects, int i){
             Obj = &objects;
+            index = i;
+        }
+
+        ObjectLayer& getObjects(){
+            return *Obj;
+        }
+
+        void AutoDestroy(){
+            //Obj->erase(Obj->begin() + index);
+            Obj->setIndexToRemove(index);
         }
 
         void SetMaxSpeed(float x, float y){
@@ -61,32 +69,10 @@ class DinamicObject : public GameObject{
 
         virtual void OnCollisionY(){}
 
-        void SetOffsetX(int x){
-            offsetX = x;
-        }
-
-        void SetOffsetY(int y){
-            offsetY = y;
-        }
-
-        int getOffsetX(){
-            return offsetX;
-        }
-
-        int getOffsetY(){
-            return offsetY;
-        }
+        
 
         void setShowHitbox(bool x){
             showHitbox = x;
-        }
-
-        void setOffsetPosX(float x){
-            offsetPosX = x;
-        }
-
-        void setOffsetPosY(float y){
-            offsetPosY = y;
         }
 
 };

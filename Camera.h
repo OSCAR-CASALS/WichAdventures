@@ -1,6 +1,7 @@
 #include "TileClass.h"
 #include "Objects.h"
 #include "GameObjects.h"
+#include "GameObjectHandler.h"
 #include <memory>
 
 using namespace std;
@@ -9,7 +10,7 @@ class Camera {
     private:
         vector<unique_ptr<TileMap>>* TileMapsToMove = nullptr;
         GameObject* Target = nullptr;
-        vector<unique_ptr<GameObject>>* GameO = nullptr;
+        ObjectLayer* GameO = nullptr;
         Vector2D scroll_speed;
         Vector2D m_position;
     public:
@@ -20,7 +21,7 @@ class Camera {
             TileMapsToMove = &TMaps;
         }
 
-        void SetGameObjects(vector<unique_ptr<GameObject>> &objects);
+        void SetGameObjects(ObjectLayer &objects);
 
         void update();
 

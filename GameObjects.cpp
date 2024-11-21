@@ -3,11 +3,12 @@
 #include "Objects.h"
 #include "GameObjects.h"
 #include "TileClass.h"
+#include "GameObjectHandler.h"
 #include<map>
 
 void DinamicObject::HandleMovement(){
     Vector2D vel = getVelocity() + getAcceleration();
-    Vector2D offsetPos = Vector2D(offsetPosX, offsetPosY);
+    Vector2D offsetPos = Vector2D(getOffsetPosX(), getOffsetPosY());
     Vector2D newPosition = getRealPos();
     //Vector2D drawPosition = getPosition();
     Vector2D Acceleration = getAcceleration();
@@ -45,7 +46,7 @@ void DinamicObject::HandleMovement(){
     if(Tiles){
         newPosition.setX(newPosition.getX() + vel.getX());
         for(auto &o : *Tiles){
-            vector<pair <int, int>> colX = o->checkCollision(newPosition + offsetPos, getWidth() + offsetX, getHeight() + offsetY);
+            vector<pair <int, int>> colX = o->checkCollision(newPosition + offsetPos, getWidth() + getOffsetX(), getHeight() + getOffsetY());
             if(colX.size() != 0){
                 newPosition.setX(getRealPos().getX());
                 vel.setX(0);
@@ -56,7 +57,7 @@ void DinamicObject::HandleMovement(){
         }
         newPosition.setY(newPosition.getY() + vel.getY());
         for(auto &o : *Tiles){
-            vector<pair <int, int>> colY = o->checkCollision(newPosition + offsetPos, getWidth() + offsetX, getHeight() + offsetY);
+            vector<pair <int, int>> colY = o->checkCollision(newPosition + offsetPos, getWidth() + getOffsetX(), getHeight() + getOffsetY());
             
             if(colY.size() != 0){
                 //cout << "ColHapened" << endl;
@@ -82,7 +83,7 @@ void DinamicObject::update(){
 void DinamicObject::draw(){
     GameObject::draw();
     if(showHitbox == true){
-        SDL_Rect re = {getPosition().getX() + offsetPosX, getPosition().getY() + offsetPosY, getWidth() + offsetX, getHeight() + offsetY};
+        SDL_Rect re = {getPosition().getX() + getOffsetPosX(), getPosition().getY() + getOffsetPosY(), getWidth() + getOffsetX(), getHeight() + getOffsetY()};
         draw_rect(re);
     }
 }
@@ -131,15 +132,31 @@ void Player::OnLoad(){
 // Goomba functions
 
 void Goomba::update(){
+    Vector2D offsetPos = Vector2D(getOffsetPosX(), getOffsetPosY());
     setAccelerationY(0.4);
-    if(getPosition().getX() < (getDimensions().first - 10)){
-        // Destroy object
+    
+    if(getPosition().getX() < 0){
+        AutoDestroy();
     }
+
+    vector<unique_ptr<GameObject>> &O = getObjects().getVector();
+    
+    if(O.size() > 0){
+        GameObject* Pl = O[0].get();
+
+        Vector2D PlOffset = Vector2D(Pl->getOffsetPosX(), Pl->getOffsetPosY());
+
+        if(vectors_cols(getRealPos() + offsetPos, getWidth() + getOffsetX(), getHeight() + getOffsetY(), 
+            Pl->getRealPos() + PlOffset, Pl->getWidth() + Pl->getOffsetX(), Pl->getHeight() + Pl->getOffsetY()
+            )){
+                AutoDestroy();
+            }
+        }
+    
     setVelocity(direction, getVelocity().getY());
     DinamicObject::update();
 }
 
 void Goomba::OnCollisionX(){
-    cout << direction << endl;
     direction = direction * (-1);
 }

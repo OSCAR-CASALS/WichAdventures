@@ -32,9 +32,12 @@ void Camera::update(){
         t->update();   
     }
     if(GameO){
+        GameO->update();
+        /*
         for(auto &o : *GameO){
             o->update();
         }
+        */
     }
 }
 
@@ -45,10 +48,15 @@ void Camera::render(){
         }
     }
     if(GameO){
+        GameO->SetOffsetX(-m_position.getX());
+        GameO->SetOffsetY(-m_position.getY());
+        GameO->draw();
+        /*
         for (auto &o : *GameO){
             o->setPosition(o->getRealPos().getX() - m_position.getX(), o->getRealPos().getY() - m_position.getY());
             o->draw();
         }
+        */
     }
 }
 
@@ -62,6 +70,6 @@ void Camera::Exit(){
     }
 }
 
-void Camera::SetGameObjects(vector<unique_ptr<GameObject>> &objects){
+void Camera::SetGameObjects(ObjectLayer &objects){
     GameO = &objects;
 }
