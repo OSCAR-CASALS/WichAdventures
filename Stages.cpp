@@ -88,7 +88,7 @@ void first_level::render(){
 bool first_level::OnEnter(){
     //loadTexture("floorTile", "Sprites/HGTiles.png");
     loadTexture("floorTile", "Sprites/TileMap_Mario.png");
-    loadTexture("PlayerTexture", "Sprites/mario.png");
+    loadTexture("PlayerTexture", "Sprites/AAA.png");
     loadTexture("Item", "Sprites/Items.png");
     loadTexture("Enemies", "Sprites/Enemies.png");
     //loadTexture("PlayerTextura", "Sprites/GreyScaleDaddy.png");
@@ -118,7 +118,7 @@ bool first_level::OnEnter(){
         int posY = i["y"].get<int>();
 
         if(i["name"].get<string>() == "PlayerSpawn"){
-            unique_ptr<Player> Pl = make_unique<Player>("PlayerTexture", Vector2D(posX, posY), 8, 0);
+            unique_ptr<Player> Pl = make_unique<Player>("PlayerTexture", Vector2D(posX, posY), 63, 0);
             Pl->SetTiles(tileMapsCol);
             Pl->OnLoad();
             m_gameObjects.AddObject(move(Pl));

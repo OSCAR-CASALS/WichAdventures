@@ -123,6 +123,30 @@ class GameObject{
         void setOffsetPosY(float y){
             offsetPosY = y;
         }
+        
+        void setWidth(int w){
+            m_width = w;
+        }
+
+        void setHeight(int h){
+            m_height = h;
+        }
+
+        void setRow(int r){
+            m_row = r;
+        }
+
+        int getRow(){
+            return m_row;
+        }
+
+        void setColumn(int c){
+            m_column = c;
+        }
+
+        int getColumn(){
+            return m_column;
+        }
 };
 
 class NormalTile : public GameObject{

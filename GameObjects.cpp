@@ -95,11 +95,16 @@ void Player::update(){
 
     if(state[SDL_SCANCODE_D]){
         setAccelerationX(acceleration);
+        animate = getWidth();
+        Flip = SDL_FLIP_NONE;
     }else if(state[SDL_SCANCODE_A]){
         setAccelerationX(-acceleration);
+        animate = getWidth();
+        Flip = SDL_FLIP_HORIZONTAL;
     }
     else{
         setAccelerationX(0);
+        animate = 0;
     }
 
     if(state[SDL_SCANCODE_K]){
@@ -120,6 +125,11 @@ void Player::update(){
     DinamicObject::update();
 }
 
+void Player::draw(){
+    drawFrame("PlayerTexture", animate*update_anim(128, 4), getRow(), getWidth(), getHeight(), getPosition().getX(), getPosition().getY(), false, Flip);
+    //DinamicObject::draw();
+}
+
 void Player::OnLoad(){
     //setTileWidthHeight(12, 16);
     SetMaxSpeed(0.5, 1);
@@ -127,6 +137,7 @@ void Player::OnLoad(){
     SetDeacceleration(acceleration);
     SetOffsetY(-2);
     setShowHitbox(true);
+    setTileWidthHeight(18, 21);
 }
 
 // Goomba functions

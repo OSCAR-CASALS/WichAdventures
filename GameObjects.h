@@ -63,7 +63,7 @@ class DinamicObject : public GameObject{
 
         void update();
 
-        void draw();
+        virtual void draw();
 
         virtual void OnCollisionX(){}
 
@@ -84,10 +84,13 @@ class Player : public DinamicObject{
         bool m_jumping = false;
         bool canJump = true;
         float acceleration = 0.1;
+        int animate = 0;
+        SDL_RendererFlip Flip = SDL_FLIP_NONE;
     public:
         Player(string tex, Vector2D pos, int row, int column,SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : DinamicObject(tex, pos, row, column, dir, Collideable, angl){}
         void update();
         void OnLoad();
+        void draw();
 };
 
 class Goomba : public DinamicObject{
