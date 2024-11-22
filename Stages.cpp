@@ -23,7 +23,7 @@ void MenuStage::render(){
 bool MenuStage::OnEnter(){
     create_text("Play_text", "PLAY", {0, 128, 0, 255}, true);
     create_text("Title", "ANOTHER CLONE", {0, 128, 0, 255}, false);
-    buttons.push_back(Button("Play_text",104, 50, Vector2D(188, 110), PlayButtonClicked));
+    buttons.push_back(Button("Play_text",48, 24, Vector2D(188, 110), PlayButtonClicked,{255, 0, 0, 1}, {255, 255, 255, 1}));
     return true;
 }
 
