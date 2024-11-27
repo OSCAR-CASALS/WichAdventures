@@ -7,9 +7,11 @@
 //#include "GameObjects.h"
 #include <map>
 #include <memory>
+#include <algorithm>
 
 class TileMap {
     private:
+        string m_TextureID;
         int m_height;
         int m_cols;
         int TileSize;
@@ -18,9 +20,13 @@ class TileMap {
         vector<vector<pair<int, int>>> tilesID;
         vector<vector<unique_ptr<GameObject>>> tiles;
         Vector2D camera;
+        int m_tileset_twidth;
+        vector<int> m_Collideable_IDs;
     public:
         void load(vector<int> tilemapInput);
-        TileMap(vector<int> levelvector, int height, int cols, int tileSize, int renderDistanceX, int renderDistanceY) : m_height(height), m_cols(cols), TileSize(tileSize), drawingDistanceX(renderDistanceX), drawingDistanceY(renderDistanceY) ,camera(0, 0){
+        TileMap(string TextureID, vector<int> levelvector, int height, int cols, int tileSize, int renderDistanceX, int renderDistanceY, int tileset_twidth, vector<int> Cols) : m_TextureID(TextureID),m_height(height), m_cols(cols), TileSize(tileSize), drawingDistanceX(renderDistanceX), drawingDistanceY(renderDistanceY) ,camera(0, 0), m_tileset_twidth(tileset_twidth){
+            m_Collideable_IDs = Cols;
+            m_Collideable_IDs.push_back(-1);
             load(levelvector);
         }
         void draw();

@@ -42,7 +42,7 @@ const string first_level::s_first_levelID = "FIRST_LEVEL";
 
 void first_level::update(){
     //PlayerHandler();
-    /*
+    
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_RIGHT]){
         camera.setSpeed(2, 0);
@@ -56,7 +56,7 @@ void first_level::update(){
     else{
         camera.setSpeed(0, 0);
     }
-    */
+    
 
    vector<unique_ptr<GameObject>> &O = m_gameObjects.getVector();
     // && (O[0]->getVelocity().getX() != 0)
@@ -87,7 +87,7 @@ void first_level::render(){
 
 bool first_level::OnEnter(){
     //loadTexture("floorTile", "Sprites/HGTiles.png");
-    loadTexture("floorTile", "Sprites/TileMap_Mario.png");
+    loadTexture("floorTile", "Sprites/TilesMario.png");
     loadTexture("PlayerTexture", "Sprites/AAA.png");
     loadTexture("Item", "Sprites/Items.png");
     loadTexture("Enemies", "Sprites/Enemies.png");
@@ -95,7 +95,7 @@ bool first_level::OnEnter(){
     //loadTexture("DaddyProfile", "Sprites/ProfilePicks.png");
     //vector<int> testLevel = {1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1};
 
-    fstream file("Sprites/test.json");
+    fstream file("Sprites/TestLevel.json");
     json data = json::parse(file);
     file.close();
 
@@ -106,8 +106,8 @@ bool first_level::OnEnter(){
     int MapWidth = data["layers"][0]["width"].get<int>();
     int MapHeight = data["layers"][0]["height"].get<int>();
     testLevel.push_back(-1);
-
-    tileMapsCol.emplace_back(make_unique<TileMap>(testLevel, MapHeight, MapWidth, 16, 30, 19));
+    vector<int> CollideableIDs = {0, 32, 1, 33, 2, 3, 34, 35};
+    tileMapsCol.emplace_back(make_unique<TileMap>("floorTile",testLevel, MapHeight, MapWidth, 32, 50, 50, 1024, CollideableIDs));
 
     // Loading GameObjects Layer
 
@@ -142,7 +142,7 @@ bool first_level::OnEnter(){
     Set_Background_Color(147, 148, 254, 1);
     camera.SetTileMaps(tileMapsCol);
     camera.SetGameObjects(m_gameObjects);
-    camera.setY(40.0);
+    camera.setY(300.0);
 
     //camera.setTarget(m_gameObjects[0]);
 

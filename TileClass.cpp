@@ -11,6 +11,7 @@ void TileMap::load(vector<int> tilemapInput){
     int col = 0;
     float x = 0;
     float y = 0;
+    int tilesetWidth = m_tileset_twidth / TileSize;
     //vector<unique_ptr<GameObject>> current_row;
     vector<pair<int, int>> ids;
     int tCount = 0;
@@ -32,33 +33,45 @@ void TileMap::load(vector<int> tilemapInput){
             ids.clear();
             tCount = 0;
         }
+
+        if((tile != 0) && (tile != -1)){
+            int trow = ((tile - 1) / tilesetWidth) * TileSize;
+            int tcol = ((tile - 1) % tilesetWidth) * TileSize;
+            bool Collideable = find(m_Collideable_IDs.begin(), m_Collideable_IDs.end(), tile - 1) != m_Collideable_IDs.end() ? true : false;
+            unique_ptr<NormalTile> Bl = make_unique<NormalTile>(m_TextureID, Vector2D(x, y), trow, tcol, SDL_FLIP_NONE, Collideable);
+            Bl->setWidth(TileSize);
+            Bl->setHeight(TileSize);
+            tiles[rowCount].emplace_back(move(Bl));
+            ids.push_back({tile, tCount});
+            tCount += 1;
+            tiles[rowCount].back()->OnLoad();
+        }else{
+            ids.push_back({tile, -1});
+        }
+
+
+        /*
         switch (tile){
-        case 43:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 16, 0, SDL_FLIP_NONE, true));
+        case 450:
+            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 224, 16, SDL_FLIP_NONE, true));
             ids.push_back({tile, tCount});
             tCount += 1;
             tiles[rowCount].back()->OnLoad();
             break;
-        case 1555:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 592, 0, SDL_FLIP_NONE, true));
+        case 403:
+            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 221, 288, SDL_FLIP_NONE, true));
             ids.push_back({tile, tCount});
             tCount += 1;
             tiles[rowCount].back()->OnLoad();
             break;
-        case 1597:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 608, 0, SDL_FLIP_NONE, true));
+        case 402:
+            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 221, 272, SDL_FLIP_NONE, true));
             ids.push_back({tile, tCount});
             tCount += 1;
             tiles[rowCount].back()->OnLoad();
             break;
-        case 1933:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 736, 0, SDL_FLIP_NONE, true));
-            ids.push_back({tile, tCount});
-            tCount += 1;
-            tiles[rowCount].back()->OnLoad();
-            break;
-        case 85:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 32, 0, SDL_FLIP_NONE, true));
+        case 402:
+            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 221, 272, SDL_FLIP_NONE, true));
             ids.push_back({tile, tCount});
             tCount += 1;
             tiles[rowCount].back()->OnLoad();
@@ -67,6 +80,7 @@ void TileMap::load(vector<int> tilemapInput){
             ids.push_back({tile, -1});
             break;
         }
+        */
         col += 1;
         x += TileSize;
     }
