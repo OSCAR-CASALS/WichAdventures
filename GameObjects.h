@@ -110,4 +110,33 @@ class Goomba : public DinamicObject{
         void OnCollisionX();
 };
 
+// Spawner
+
+class GoombaSpawner : public GameObject{
+    private:
+        bool Spawned = false;
+        ObjectLayer *Obj = nullptr;
+        int index;
+        vector<unique_ptr<TileMap>> *Tiles = nullptr;
+    public:
+        GoombaSpawner(Vector2D pos, bool Collideable = false) : GameObject("", pos, 16, 0) {}
+        void update();
+        void draw(){}
+
+        void SetObj(ObjectLayer &objects, int i){
+            Obj = &objects;
+            index = i;
+        }
+
+        ObjectLayer& getObjects(){
+            return *Obj;
+        }
+
+        void SetTiles(vector<unique_ptr<TileMap>> &objects){
+            Tiles = &objects;
+        }
+
+        void AddGoomba();
+};
+
 #endif

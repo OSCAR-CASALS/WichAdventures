@@ -38,10 +38,15 @@ void TileMap::load(vector<int> tilemapInput){
             int trow = ((tile - 1) / tilesetWidth) * TileSize;
             int tcol = ((tile - 1) % tilesetWidth) * TileSize;
             bool Collideable = find(m_Collideable_IDs.begin(), m_Collideable_IDs.end(), tile - 1) != m_Collideable_IDs.end() ? true : false;
-            unique_ptr<NormalTile> Bl = make_unique<NormalTile>(m_TextureID, Vector2D(x, y), trow, tcol, SDL_FLIP_NONE, Collideable);
-            Bl->setWidth(TileSize);
-            Bl->setHeight(TileSize);
-            tiles[rowCount].emplace_back(move(Bl));
+            switch (tile - 1){
+                
+            default:
+                unique_ptr<NormalTile> Bl = make_unique<NormalTile>(m_TextureID, Vector2D(x, y), trow, tcol, SDL_FLIP_NONE, Collideable);
+                Bl->setWidth(TileSize);
+                Bl->setHeight(TileSize);
+                tiles[rowCount].emplace_back(move(Bl));
+                break;
+            }
             ids.push_back({tile, tCount});
             tCount += 1;
             tiles[rowCount].back()->OnLoad();

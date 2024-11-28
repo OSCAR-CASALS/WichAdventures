@@ -122,13 +122,13 @@ bool first_level::OnEnter(){
             Pl->SetTiles(tileMapsCol);
             Pl->OnLoad();
             m_gameObjects.AddObject(move(Pl));
-        }else if(i["name"].get<string>() == "GoombaSpawn"){
+        }/*else if(i["name"].get<string>() == "GoombaSpawn"){
             unique_ptr<Goomba> G = make_unique<Goomba>("Enemies", Vector2D(posX, posY), 16, 0);
             G->SetTiles(tileMapsCol);
             G->OnLoad();
             G->SetObj(m_gameObjects, m_gameObjects.getSize());
             m_gameObjects.AddObject(move(G));
-        }
+        }*/
     }
     //tileMapsCol.push_back(TileMap("Sprites/test.txt", 26, 40, 16, 30, 24));
 
@@ -142,7 +142,25 @@ bool first_level::OnEnter(){
     Set_Background_Color(147, 148, 254, 1);
     camera.SetTileMaps(tileMapsCol);
     camera.SetGameObjects(m_gameObjects);
-    camera.setY(300.0);
+    camera.setY(300.0); 
+
+    for(auto &t : tileMapsCol){
+        vector<vector<unique_ptr<GameObject>>>& TObjs = t->getTilesObj();
+        vector<vector<pair<int, int>>> TIDs = t->GetIDs();
+
+        for(int y = 0; y < TIDs.size(); y++){
+            vector<pair<int, int>> ID = TIDs[y];
+            for(int x = 0; x < ID.size(); x++){
+                pair<int, int> e = ID[x];
+                if(e.first == 857){
+                    unique_ptr<GoombaSpawner> NewG = make_unique<GoombaSpawner>(TObjs[y][e.second]->getRealPos());
+                    NewG->SetObj(m_gameObjects, m_gameObjects.getSize());
+                    NewG->SetTiles(tileMapsCol);
+                    t->ChangeTile(move(NewG), 50, y, x);
+                }
+            }
+        }
+    }
 
     //camera.setTarget(m_gameObjects[0]);
 

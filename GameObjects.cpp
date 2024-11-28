@@ -171,3 +171,23 @@ void Goomba::update(){
 void Goomba::OnCollisionX(){
     direction = direction * (-1);
 }
+
+// spawner
+
+void GoombaSpawner::AddGoomba(){
+    Vector2D Rpos = getRealPos();
+    if(Obj && Tiles){
+        unique_ptr<Goomba> G = make_unique<Goomba>("Enemies", Rpos, 16, 0);
+        G->SetTiles(*Tiles);
+        G->OnLoad();
+        G->SetObj(*Obj, Obj->getSize());
+        Obj->AddObject(move(G));
+    }
+}
+
+void GoombaSpawner::update(){
+    if(Spawned == false){
+        AddGoomba();
+        Spawned = true;
+    }
+}

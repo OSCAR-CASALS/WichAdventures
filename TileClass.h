@@ -48,9 +48,24 @@ class TileMap {
 
         void RemoveTile(int x, int y);
 
+        void ChangeTile(unique_ptr<GameObject> obj, int ID, int y, int x){
+            pair<int, int> OldEntry = tilesID[y][x];
+            pair<int, int> NewEntry = {ID, OldEntry.second};
+            tiles[y][OldEntry.second] = move(obj);
+            tilesID[y][x] = NewEntry;
+        }
+
+        vector<vector<pair<int, int>>> GetIDs(){
+            return tilesID;
+        }
+
         void UpdateTilePos(int x, int y, int x2, int y2);
 
         void Exit();
+
+        vector<vector<unique_ptr<GameObject>>>& getTilesObj(){
+            return tiles;
+        }
         //void DefineSprites(){}
 };
 
