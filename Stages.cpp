@@ -76,6 +76,9 @@ void first_level::render(){
     player.draw();
     */
     //drawFull("DaddyProfile", 0, 0, false, SDL_FLIP_NONE);
+    pair<int, int> Dims =  getDimensions();
+    SDL_Rect re = {0, 0,Dims.first, Dims.second};
+    draw_fill_rect(re, 147, 148, 254, 1);
     camera.render();
     /*
     for(auto &g : m_gameObjects){
@@ -88,7 +91,7 @@ void first_level::render(){
 bool first_level::OnEnter(){
     //loadTexture("floorTile", "Sprites/HGTiles.png");
     loadTexture("floorTile", "Sprites/TilesMario.png");
-    loadTexture("PlayerTexture", "Sprites/AAA.png");
+    loadTexture("PlayerTexture", "Sprites/Witch_imported.png");
     loadTexture("Item", "Sprites/Items.png");
     loadTexture("Enemies", "Sprites/Enemies.png");
     //loadTexture("PlayerTextura", "Sprites/GreyScaleDaddy.png");
@@ -110,7 +113,8 @@ bool first_level::OnEnter(){
     tileMapsCol.emplace_back(make_unique<TileMap>("floorTile",testLevel, MapHeight, MapWidth, 32, 50, 50, 1024, CollideableIDs));
 
     // Loading GameObjects Layer
-
+    int cameraPosX = 0;
+    int cameraPosY = 0;
     for (auto &i : data["layers"][1]["objects"]){
 
         int posX = i["x"].get<int>();
@@ -118,10 +122,12 @@ bool first_level::OnEnter(){
         int posY = i["y"].get<int>();
 
         if(i["name"].get<string>() == "PlayerSpawn"){
-            unique_ptr<Player> Pl = make_unique<Player>("PlayerTexture", Vector2D(posX, posY), 63, 0);
+            unique_ptr<Player> Pl = make_unique<Player>("PlayerTexture", Vector2D(posX, posY), 0, 0);
             Pl->SetTiles(tileMapsCol);
             Pl->OnLoad();
             m_gameObjects.AddObject(move(Pl));
+            cameraPosX = posX;
+            cameraPosY = posY;
         }/*else if(i["name"].get<string>() == "GoombaSpawn"){
             unique_ptr<Goomba> G = make_unique<Goomba>("Enemies", Vector2D(posX, posY), 16, 0);
             G->SetTiles(tileMapsCol);
@@ -139,10 +145,12 @@ bool first_level::OnEnter(){
        tilemap->setCameraY(26.0);
     }
     */
-    Set_Background_Color(147, 148, 254, 1);
+    //Set_Background_Color(147, 148, 254, 1);
     camera.SetTileMaps(tileMapsCol);
     camera.SetGameObjects(m_gameObjects);
-    camera.setY(300.0); 
+    pair<int, int> Dims = getDimensions();
+    camera.setX(cameraPosX - (Dims.first / 2));
+    camera.setY(cameraPosY - (Dims.second / 2)); 
 
     for(auto &t : tileMapsCol){
         vector<vector<unique_ptr<GameObject>>>& TObjs = t->getTilesObj();

@@ -83,12 +83,16 @@ class Player : public DinamicObject{
     private:
         bool m_jumping = false;
         bool canJump = true;
-        float acceleration = 0.1;
+        float acceleration = 0.2;
         int animate = 0;
+        int head = 0;
         SDL_RendererFlip Flip = SDL_FLIP_NONE;
+        float initialPos = 0;
+        float maxJump = 90;
     public:
         Player(string tex, Vector2D pos, int row, int column,SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : DinamicObject(tex, pos, row, column, dir, Collideable, angl){}
         void update();
+        void OnCollisionY();
         void OnLoad();
         void draw();
 };

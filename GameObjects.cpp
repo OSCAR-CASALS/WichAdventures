@@ -96,48 +96,85 @@ void Player::update(){
     if(state[SDL_SCANCODE_D]){
         setAccelerationX(acceleration);
         animate = getWidth();
+        head = 32;
         Flip = SDL_FLIP_NONE;
     }else if(state[SDL_SCANCODE_A]){
         setAccelerationX(-acceleration);
         animate = getWidth();
+        head = 32;
         Flip = SDL_FLIP_HORIZONTAL;
     }
     else{
         setAccelerationX(0);
         animate = 0;
+        head = 0;
     }
 
-    if(state[SDL_SCANCODE_K]){
-        if((getAcceleration().getX() < (acceleration*2)) & (getAcceleration().getX() > -(acceleration*2))){
-            setAccelerationX(getAcceleration().getX() * 2);
+    if(mouse.Left_Click == true){
+        if(getVelocity().getX() != 0){
+            head = 48;
+        }else{
+            head = 16;
         }
-        SetMaxSpeed(2, 4);
-    }else{
-        SetMaxSpeed(0.5, 4);
     }
 
     if(state[SDL_SCANCODE_W]){
-        if((m_jumping == false) && (canJump == true)){
+        if(canJump == true){
             setAccelerationY(-acceleration);
+            initialPos = getRealPos().getY();
+            m_jumping = true;
+            canJump = false;
+        }else if(m_jumping == true){
+            if (getRealPos().getY() > (initialPos - maxJump)){
+                setAccelerationY(-acceleration);
+            }
         }
     }
 
+    if(getAcceleration().getY() > 0.0){
+        m_jumping = false;
+    }
+
+    if(state[SDL_SCANCODE_UP]){
+        maxJump += 2;
+        cout << maxJump << endl;
+    }else if(state[SDL_SCANCODE_DOWN]){
+        maxJump -= 2;
+        cout << maxJump << endl;
+    }
+
     DinamicObject::update();
+
+    canJump = getAcceleration().getY() == 0 ? true : false;
+}
+
+void Player::OnCollisionY(){
+    if(getVelocity().getY() > 0){
+        canJump = true;
+    }
 }
 
 void Player::draw(){
-    drawFrame("PlayerTexture", animate*update_anim(128, 4), getRow(), getWidth(), getHeight(), getPosition().getX(), getPosition().getY(), false, Flip);
+    if(getVelocity().getY() != 0){
+        drawFrame("PlayerTexture", 96, getRow(), getWidth(), getHeight(), getPosition().getX(), getPosition().getY(), false, Flip);
+        head = (head < 32) ? head + 32 : head;
+    } else if(animate > 0){
+        drawFrame("PlayerTexture", 96 + (animate*update_anim(128, 4)), getRow(), getWidth(), getHeight(), getPosition().getX(), getPosition().getY(), false, Flip);
+    }else{
+        drawFrame("PlayerTexture", 80, getRow(), getWidth(), getHeight(), getPosition().getX(), getPosition().getY(), false, Flip);
+    }
+    drawFrame("PlayerTexture", head, getRow(), getWidth(), getHeight(), getPosition().getX(), getPosition().getY(), false, Flip);
     //DinamicObject::draw();
 }
 
 void Player::OnLoad(){
     //setTileWidthHeight(12, 16);
-    SetMaxSpeed(0.5, 1);
+    SetMaxSpeed(2, 4);
     setTag("Player");
     SetDeacceleration(acceleration);
     SetOffsetY(-2);
     setShowHitbox(true);
-    setTileWidthHeight(18, 21);
+    setTileWidthHeight(16, 26);
 }
 
 // Goomba functions
