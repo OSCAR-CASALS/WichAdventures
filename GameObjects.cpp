@@ -148,12 +148,6 @@ void Player::update(){
     canJump = getAcceleration().getY() == 0 ? true : false;
 }
 
-void Player::OnCollisionY(){
-    if(getVelocity().getY() > 0){
-        canJump = true;
-    }
-}
-
 void Player::draw(){
     if(getVelocity().getY() != 0){
         drawFrame("PlayerTexture", 96, getRow(), getWidth(), getHeight(), getPosition().getX(), getPosition().getY(), false, Flip);
