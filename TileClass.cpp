@@ -1,34 +1,22 @@
 #include "TileClass.h"
 #include<fstream>
-//#include<nlohmann/json.hpp>
-
-//using json = nlohmann::json;
 
 void TileMap::load(vector<int> tilemapInput){
-    //fstream file;
-    //file.open(tilemapPath);
-    //int tile = 0;
     int col = 0;
     float x = 0;
     float y = 0;
     int tilesetWidth = m_tileset_twidth / TileSize;
-    //vector<unique_ptr<GameObject>> current_row;
     vector<pair<int, int>> ids;
     int tCount = 0;
     tiles.emplace_back(vector<unique_ptr<GameObject>>{});
     int rowCount = 0;
     for(int tile : tilemapInput){
-        //cout << tile << ", ";
-        //cout << "Columns: " << col << endl;
         if(col >= m_cols){
-            //cout << "Next row" << endl;
-            //cout << endl;
             col = 0;
             x = 0;
             y += TileSize;
             tiles.emplace_back(vector<unique_ptr<GameObject>>{});
             rowCount += 1;
-            //current_row.clear();
             tilesID.push_back(ids);
             ids.clear();
             tCount = 0;
@@ -38,15 +26,12 @@ void TileMap::load(vector<int> tilemapInput){
             int trow = ((tile - 1) / tilesetWidth) * TileSize;
             int tcol = ((tile - 1) % tilesetWidth) * TileSize;
             bool Collideable = find(m_Collideable_IDs.begin(), m_Collideable_IDs.end(), tile - 1) != m_Collideable_IDs.end() ? true : false;
-            switch (tile - 1){
-                
-            default:
-                unique_ptr<NormalTile> Bl = make_unique<NormalTile>(m_TextureID, Vector2D(x, y), trow, tcol, SDL_FLIP_NONE, Collideable);
-                Bl->setWidth(TileSize);
-                Bl->setHeight(TileSize);
-                tiles[rowCount].emplace_back(move(Bl));
-                break;
-            }
+            
+            unique_ptr<NormalTile> Bl = make_unique<NormalTile>(m_TextureID, Vector2D(x, y), trow, tcol, SDL_FLIP_NONE, Collideable);
+            Bl->setWidth(TileSize);
+            Bl->setHeight(TileSize);
+            tiles[rowCount].emplace_back(move(Bl));
+
             ids.push_back({tile, tCount});
             tCount += 1;
             tiles[rowCount].back()->OnLoad();
@@ -54,42 +39,9 @@ void TileMap::load(vector<int> tilemapInput){
             ids.push_back({tile, -1});
         }
 
-
-        /*
-        switch (tile){
-        case 450:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 224, 16, SDL_FLIP_NONE, true));
-            ids.push_back({tile, tCount});
-            tCount += 1;
-            tiles[rowCount].back()->OnLoad();
-            break;
-        case 403:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 221, 288, SDL_FLIP_NONE, true));
-            ids.push_back({tile, tCount});
-            tCount += 1;
-            tiles[rowCount].back()->OnLoad();
-            break;
-        case 402:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 221, 272, SDL_FLIP_NONE, true));
-            ids.push_back({tile, tCount});
-            tCount += 1;
-            tiles[rowCount].back()->OnLoad();
-            break;
-        case 402:
-            tiles[rowCount].emplace_back(make_unique<NormalTile>("floorTile", Vector2D(x, y), 221, 272, SDL_FLIP_NONE, true));
-            ids.push_back({tile, tCount});
-            tCount += 1;
-            tiles[rowCount].back()->OnLoad();
-            break;
-        default:
-            ids.push_back({tile, -1});
-            break;
-        }
-        */
         col += 1;
         x += TileSize;
     }
-    //file.close();
 }
 
 void TileMap::draw(){
@@ -103,14 +55,11 @@ void TileMap::draw(){
     y2 = y1 + drawingDistanceY*TileSize + (y1 == 0 ? 0 : TileSize);
     my = int(camera.getY()) / TileSize;
 
-    //cout << "MX: " << mx << ", MY: " << my << ", MCOLS: " << m_cols << ", M_HEIGHT: " << m_height << endl;
-
     for (int y=y1; y < y2; y+=TileSize){
         for(int x=x1; x < x2; x+=TileSize){
             if(mx < m_cols && mx >= 0 && my >=0 && my < m_height){ 
                 n = tilesID[my][mx];
                 if(n.first != 0){
-                    //cout << n.first << endl;
                     tiles[my][n.second]->draw();
                 }
             }
@@ -122,7 +71,6 @@ void TileMap::draw(){
 }
 
 void TileMap::update(bool scrollX, bool scrollY){
-    //code
     int x1, y1, x2, y2, mx, my;
     pair<int, int> n = {0, 0};
     x1 = (int(camera.getX())%TileSize)*-1;
@@ -148,7 +96,7 @@ void TileMap::update(bool scrollX, bool scrollY){
     }
 }
 
-vector<pair<int, int>> TileMap::checkCollision(Vector2D pos, int width, int height, bool interaction, bool attack, string objectTag){ 
+pair<vector<pair<int, int>>, vector<pair<int, int>>> TileMap::checkCollision(Vector2D pos, int width, int height, bool interaction, bool attack, string objectTag){ 
     int leftTile = int(pos.getX()) / TileSize;
     int rightTile = (int(pos.getX()) + width) / TileSize;
     int topTile = int(pos.getY()) / TileSize;
@@ -161,32 +109,27 @@ vector<pair<int, int>> TileMap::checkCollision(Vector2D pos, int width, int heig
 
 
     vector<pair<int, int>> res;
-    //cout << "X-Axis: " << leftTile << " " << rightTile << endl;
-    //cout << "Y-Axis: " << topTile << " " << bottomTile << endl;
+    vector<pair<int, int>> All;
 
     for(int i=leftTile; i<=rightTile; i++){
         for(int j=topTile; j<=bottomTile; j++){
             pair<int, int> TheTile = tilesID[j][i];
-            //tiles[j][TheTile.second]->OnCollision();
             if(TheTile.first != 0){
                 tiles[j][TheTile.second]->OnCollision(pos, width, height, i, j, objectTag);
                 if(tiles[j][TheTile.second]->getCollideable() == true){
-                    //return {j, i};
                     res.push_back({j, i});
                 }
+                All.push_back({j, i});
             }
         }
     }
-    return res;
-    //return {-1, -1};
+    return {res, All};
 }
 
 
 void TileMap::RemoveTile(int x, int y){
     pair<int, int> TheTile = tilesID[y][x];
-    //if(TheTile.first != 0){
-    //    delete tiles[y][TheTile.second];
-    //}
+
     if(TheTile.first != 0){
         tiles.erase(tiles.begin() + TheTile.second);
     }
@@ -195,13 +138,6 @@ void TileMap::RemoveTile(int x, int y){
 }
 
 void TileMap::Exit(){
-    /*
-    for(auto &t: tiles){
-        for(auto &ti: t){
-            delete ti;
-        }
-    }
-    */
     tiles.clear();
 }
 

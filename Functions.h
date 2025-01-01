@@ -6,7 +6,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <vector>
-#include <box2d/box2d.h>
+#include <cmath>
 #include "structs.h"
 #include "GameStateMachine.h"
 
@@ -23,7 +23,7 @@ void presentScene();
 void loadTexture(string id, const char *filename);
 void create_text(string id, const char *text, const SDL_Color &color, bool small = false);
 void drawFrame(string id, int columnFrame, int rowFrame, int width, int height, int x, int y, bool show_hitbox, const SDL_RendererFlip flip, float angle=0.0);
-void drawFull(string id, int x, int y, bool show_hitbox, const SDL_RendererFlip flip);
+void drawFull(string id, int x, int y, bool show_hitbox, const SDL_RendererFlip flip, bool fillBackground = false, bool fillScreen = false);
 void removeTexture(string id);
 int update_anim(int fpms, int n_frames);
 void draw_rect(SDL_Rect &re, int col1 = 255, int col2 = 255, int col3 = 255, int col4 = 1);
@@ -35,5 +35,6 @@ float deltaTime();
 void finish();
 bool vectors_cols(Vector2D pos1, int width1, int height1, Vector2D pos2, int width2, int height2);
 pair<int, int> getDimensions();
+bool getEscapePressed();
 
 #endif

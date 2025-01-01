@@ -44,15 +44,21 @@ class TileMap {
         void setCameraY(float y){
             camera.setY(y);
         }
-        vector<pair<int, int>> checkCollision(Vector2D pos, int width, int height, bool interaction = false, bool attack = false, string objectTag = "");
+        pair<vector<pair<int, int>>, vector<pair<int, int>>> checkCollision(Vector2D pos, int width, int height, bool interaction = false, bool attack = false, string objectTag = "");
 
         void RemoveTile(int x, int y);
 
         void ChangeTile(unique_ptr<GameObject> obj, int ID, int y, int x){
             pair<int, int> OldEntry = tilesID[y][x];
-            pair<int, int> NewEntry = {ID, OldEntry.second};
-            tiles[y][OldEntry.second] = move(obj);
-            tilesID[y][x] = NewEntry;
+            if(OldEntry.second != -1){
+                tiles[y][OldEntry.second] = move(obj);
+                pair<int, int> NewEntry = {ID, OldEntry.second};
+                tilesID[y][x] = NewEntry;
+            }else{
+                pair<int, int> NewEntry = {ID, tiles[y].size()};
+                tiles[y].emplace_back(move(obj));
+                tilesID[y][x] = NewEntry;
+            }
         }
 
         vector<vector<pair<int, int>>> GetIDs(){
@@ -66,7 +72,6 @@ class TileMap {
         vector<vector<unique_ptr<GameObject>>>& getTilesObj(){
             return tiles;
         }
-        //void DefineSprites(){}
 };
 
 #endif

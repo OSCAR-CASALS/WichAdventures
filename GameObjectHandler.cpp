@@ -9,12 +9,23 @@ void ObjectLayer::update(){
     if(!indexToRemove.empty()){
         sort(indexToRemove.begin(), indexToRemove.end(), greater<int>());
         for (auto &c : indexToRemove){
-            GameObjectsVector.erase(GameObjectsVector.begin() + c);
+            GameObjectsVector[c] = nullptr;
+            //GameObjectsVector.erase(GameObjectsVector.begin() + rem);
         }
+
+        GameObjectsVector.erase(
+        remove_if(
+            GameObjectsVector.begin(), 
+            GameObjectsVector.end(),
+            [](const std::unique_ptr<GameObject>& ptr) { return ptr == nullptr; }
+        ), 
+        GameObjectsVector.end()
+        );
+
         indexToRemove.clear();
     }
-    for(auto&Ob : GameObjectsVector){
-        Ob->update();
+    for(int g = 0; g < GameObjectsVector.size(); g++){
+        GameObjectsVector[g]->update();
     }
 }
 

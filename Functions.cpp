@@ -29,6 +29,7 @@ int x;
 int y;
 int z;
 int alpha;
+bool EscapePressed = false;
 //Extern variavles
 Mouse mouse {Vector2D(0, 0), false, false};
 
@@ -84,6 +85,18 @@ void DoInput(){
                 mouse.mouse_pos.setX(event.motion.x);
                 mouse.mouse_pos.setY(event.motion.y);
                 break;
+            case SDL_KEYUP: {
+                if (event.key.keysym.sym == SDLK_ESCAPE) {
+                    if(EscapePressed == true){
+                        EscapePressed = false;
+                    }else{
+                        EscapePressed = true;
+                    }
+                    
+                    //printf("Escape key pressed!\n");
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -134,12 +147,21 @@ void drawFrame(string id, int columnFrame, int rowFrame, int width, int height, 
     }
 }
 
-void drawFull(string id, int x, int y, bool show_hitbox, const SDL_RendererFlip flip){
+void drawFull(string id, int x, int y, bool show_hitbox, const SDL_RendererFlip flip, bool fillBackground, bool fillScreen){
     SDL_Rect r;
     r.x = x;
     r.y = y;
     SDL_QueryTexture(textures[id], NULL, NULL, &r.w, &r.h);
     
+    if(fillBackground == true){
+        draw_fill_rect(r, 0, 0, 0, 1);
+    }
+
+    if(fillScreen == true){
+        r.w = screen_width;
+        r.h = screen_height;
+    }
+
     SDL_RenderCopyEx(render, textures[id], NULL, &r, 0, 0, flip);
     if(show_hitbox == true){
         draw_rect(r);
@@ -228,4 +250,8 @@ bool vectors_cols(Vector2D pos1, int width1, int height1, Vector2D pos2, int wid
 
 pair<int, int> getDimensions(){
     return {screen_width, screen_height};
+}
+
+bool getEscapePressed(){
+    return EscapePressed;
 }

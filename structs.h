@@ -14,6 +14,9 @@ struct Mouse{
     Vector2D mouse_pos;
     bool Left_Click = false;
     bool Right_Click = false;
+
+    int m_width = 8;
+    int m_height = 8;
 };
 
 #endif

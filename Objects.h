@@ -5,6 +5,9 @@
 #include "Vector.h"
 #include<map>
 
+extern int my_pause;
+extern bool is_cinematic;
+
 class GameObject{
     private:
         string m_Texture_ID;
@@ -28,7 +31,7 @@ class GameObject{
         GameObject(string tex, Vector2D pos, int row, int column, SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : m_Texture_ID(tex), m_position(pos), m_column(column), m_row(row), direction(dir), CanCollide(Collideable), angle(angl), m_velocity(0, 0), realPosition(pos), m_acceleration(0, 0) {}
     public:
         virtual ~GameObject() {}
-        virtual void update() = 0;
+        virtual void update();
         virtual void OnCollision(Vector2D ColPosition, int width, int height, int &tileX, int &tileY, string signal=""){}
         virtual void OnLoad() {}
         virtual void draw();
@@ -69,7 +72,6 @@ class GameObject{
 
         void setRealPos(float x, float y){
             realPosition = Vector2D(x, y);
-            //m_position = Vector2D(x, y);
         }
 
         Vector2D getAcceleration(){
@@ -147,6 +149,10 @@ class GameObject{
         int getColumn(){
             return m_column;
         }
+
+        string getTextureID(){
+            return m_Texture_ID;
+        }
 };
 
 class NormalTile : public GameObject{
@@ -154,6 +160,27 @@ class NormalTile : public GameObject{
         NormalTile(string tex, Vector2D pos, int row, int column, SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : GameObject(tex, pos, row, column, dir, Collideable, angl) {}
         void update(){}
         void onLoad(){}
+};
+
+// Objects particular to the game
+
+class GameOverFloor : public GameObject{
+    private:
+        bool *GameOverBool = nullptr;
+        string Tex = "";
+    public:
+        GameOverFloor(string tex, Vector2D pos, int row, int column, SDL_RendererFlip dir = SDL_FLIP_NONE, bool Collideable = false, float angl = 0.0) : GameObject(tex, pos, row, column, dir, Collideable, angl), Tex(tex) {}
+        void OnCollision(Vector2D ColPosition, int width, int height, int &tileX, int &tileY, string signal=""){
+            if(signal == "Player"){
+                if(GameOverBool){
+                    *GameOverBool = true;
+                }
+            }
+        }
+        void setBoolean(bool &Modify){
+            GameOverBool = &Modify;
+        }
+        void draw();
 };
 
 #endif
